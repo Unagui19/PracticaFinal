@@ -1,20 +1,21 @@
 namespace Menu
 {
-    public class Platos
+    class Platos
     {
         private string nombre;
         private int precio;
-        private int tamanio;
+        private int stock;
+
 
         public string Nombre { get => nombre; set => nombre = value; }
         public int Precio { get => precio; set => precio = value; }
-        public int Tamanio { get => tamanio; set => tamanio = value; }
+        public int Stock { get => stock; set => stock = value; }
 
-        public Platos(string nombre, int precio, int tamanio)
+        public Platos(string nombre, int precio, int stock)
         {
-            this.Nombre = nombre;
-            this.Precio = precio;
-            this.Tamanio = tamanio;
+            this.nombre = nombre;
+            this.precio = precio;
+            this.stock = stock;
         }
 
     }    

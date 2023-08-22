@@ -1,59 +1,48 @@
 ﻿using Menu;
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
-var path="disponibles.txt";
-var path2="pepe.tct";
-
-if (File.Exists(path))
+string documento;
+using (var fs = new FileStream("platos.json",FileMode.Open))//abrir el archivo
 {
-    Console.WriteLine("TRUE");
-    Console.WriteLine("");
-    string cadena = File.ReadAllText(path);//para leer todo el texto del archivo
-    Console.WriteLine(""+cadena);
-    Console.WriteLine("");
-
-    var listaDeCadenas = File.ReadAllLines(path).ToList();//para leer linea por linea el texto del archivo
-    
-    foreach (var item in listaDeCadenas)
+    using(var sr = new StreamReader(fs))// para leer
     {
-        Console.WriteLine(""+item);
+       documento= sr.ReadToEnd(); 
+       sr.Close();
     }
-    Console.WriteLine("");
-
-
-}
-else{
-    Console.WriteLine("False");
+    fs.Close();     
 }
 
-// var verduras = new FileStream("pruebaCSV.csv",FileMode.Open);//abrir el archivo
-// var sr = new StreamReader(verduras);//instanciar para leer
+Console.WriteLine(documento);
+List<Platos>? plato = JsonSerializer.Deserialize<List<Platos>>(documento);
+Console.WriteLine($"Nombre: {plato[0].Nombre}");
+Console.WriteLine($"Precio: {plato[0].Precio}");
+Console.WriteLine($"stock: {plato[0].Stock}");
 
-// var res=verduras.capa;
-// Console.WriteLine(res);
+// List<Platitos>? listadoPlatos = JsonSerializer.DeserializeAsync<List<Platitos>>(documento);
+// Console.WriteLine(""+plato.Nombre);
 
+foreach (var item in plato)
+{   
+    Console.WriteLine($"{item.Nombre}");
+    Console.WriteLine($"{item.Precio}");
+    Console.WriteLine($"{item.Stock}");
+    Console.WriteLine("\n");
+}//lo hiceeeeeeeeee, asi se lee un json!!!
 
-using (var verduras = new FileStream("pruebaCSV.csv",FileMode.Open))//abrir el archivo
+var fst = new FileStream("platos.json",FileMode.Create);
+Platos LALA = new Platos("milanga",4000,6);
+plato.Add(LALA);
+string acrchivoJson = JsonSerializer.Serialize(plato);
+using (var sw =new StreamWriter(fst))
 {
-    using(var sr = new StreamReader(verduras))// para leer
-    {
-        while (!sr.EndOfStream)
-        {
-        string line = sr.ReadLine();
-        string[] fields = line.Split(';');//para leer cada uno de los elementos hasta el ;
+    sw.WriteLine(acrchivoJson);
+    sw.Close();
+}//PARA CREAR UN JSON y guardar o solo guardar y funcionooooooooooo giiiiiiiiiiiiiiil
+fst.Close();
 
-        foreach (string field in fields)//para mostrar cada uno de los elementos
-        {
-            Console.WriteLine(field + "\t");
-        }
-        Console.WriteLine("");
-        // aux = sr.ReadToEnd();
-        // verduras.Close();
-        }
-    }
-    verduras.Close();
-}
-        // Console.WriteLine("");
+
 
 // using (var csv = new FileStream("pruebaCSV.csv",FileMode.Open))//abrir el archivo
 // {   
@@ -66,58 +55,58 @@ using (var verduras = new FileStream("pruebaCSV.csv",FileMode.Open))//abrir el a
 
 //para modificar el csv
 
-List<string> modificar = new List<string>();
-using (var csv = new FileStream("pruebaCSV.csv",FileMode.Open))//abrir el archivo
-{
-    using(var sr = new StreamReader(csv))// para leer
-    {
-        while (!sr.EndOfStream)
-        {
-        string linea = sr.ReadLine();
-        string[] fields = linea.Split(';');//para leer cada uno de los elementos hasta el ;
-        //hago las modificaciones
-        // string agregar = string.Join(";","cebolla");
+// List<string> modificar = new List<string>();
+// using (var csv = new FileStream("pruebaCSV.csv",FileMode.Open))//abrir el archivo
+// {
+//     using(var sr = new StreamReader(csv))// para leer
+//     {
+//         while (!sr.EndOfStream)
+//         {
+//         string linea = sr.ReadLine();
+//         string[] fields = linea.Split(';');//para leer cada uno de los elementos hasta el ;
+//         //hago las modificaciones
+//         // string agregar = string.Join(";","cebolla");
 
-        fields[4]=fields[4] + "laal";
-        Console.WriteLine("{4}",fields);
-        string extra ="mpalta";
-        string[] extra2 = new string[]{"cebolla"};
-        List<string> modified = new List<string>(fields);//creo una lista de strings
-        Console.WriteLine("\n Capacidad: {0}",modified.Capacity);
-        modified.Add(extra);
-        modified.InsertRange(3,extra2);
+//         fields[4]=fields[4] + "laal";
+//         Console.WriteLine("{4}",fields);
+//         string extra ="mpalta";
+//         string[] extra2 = new string[]{"cebolla"};
+//         List<string> modified = new List<string>(fields);//creo una lista de strings
+//         Console.WriteLine("\n Capacidad: {0}",modified.Capacity);
+//         modified.Add(extra);
+//         modified.InsertRange(3,extra2);
 
-        foreach (string item in modified)//para mostrar cada uno de los elementos
-        {
+//         foreach (string item in modified)//para mostrar cada uno de los elementos
+//         {
 
-            Console.WriteLine(item + "\t");
-        }
-        Console.WriteLine("");
+//             Console.WriteLine(item + "\t");
+//         }
+//         Console.WriteLine("");
 
-        string aux = string.Join(";",modified.ToArray()); 
-        Console.WriteLine(""+aux);
+//         string aux = string.Join(";",modified.ToArray()); 
+//         Console.WriteLine(""+aux);
         
-        modificar.Add(aux);
-        }
-    }
+//         modificar.Add(aux);
+//         }
+//     }
     
-    csv.Close();
-}
+//     csv.Close();
+// }
 
-Console.WriteLine("\t MODIFICADA");
-Console.WriteLine(modificar[0]);
+// Console.WriteLine("\t MODIFICADA");
+// Console.WriteLine(modificar[0]);
 
-using (var csv = new FileStream("pruebaCSV.csv",FileMode.Open))//abrir el archivo
-{   
-    using (var sw = new StreamWriter(csv))
-    {
-        foreach (var item in modificar)
-        {
-            sw.WriteLine(item);       
-        }
-    }
-    csv.Close();
-}
+// using (var csv = new FileStream("pruebaCSV.csv",FileMode.Open))//abrir el archivo
+// {   
+//     using (var sw = new StreamWriter(csv))
+//     {
+//         foreach (var item in modificar)
+//         {
+//             sw.WriteLine(item);       
+//         }
+//     }
+//     csv.Close();
+// }
 
 // //PARA LEER ARCHIVOS JSON REALMENTE
 // string verdura;
